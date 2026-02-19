@@ -177,7 +177,7 @@ app.post("/add", async (req, res) => {
 
     await model.addMovie(data);
     res.redirect(`/?filter=${encodeURIComponent(filter)}&sort=${encodeURIComponent(sort)}&q=${encodeURIComponent(q)}`);
-})
+});
 
 // Action 6: update movie
 
