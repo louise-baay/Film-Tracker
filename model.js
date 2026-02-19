@@ -38,5 +38,14 @@ function get(){
 }
 
 function all(){
-    
+
 }
+
+
+//**List Movies
+// get the movie id
+// add a movie
+// update a movie
+// toggle watched
+// delete a movie
+// cleare watched */

@@ -8,8 +8,12 @@ const PORT = 3000;
 app.engine("mustache", mustacheExpress());
 app.set("view engine", "mustache");
 app.set("views", __dirname);
-app.use(express.urlencoded({extende: true}));
+app.use(express.urlencoded({extended: true}));
 app.use(express.json());
+
+app.get("/", async (req,res) => {
+    res.render("views", { pageTitle: "Movie Tracker", movies:[]});
+});
 
 // 8 Actions - 8 Routes
 // Action 1/2/3: List + filter + sort
