@@ -5,6 +5,11 @@ const model = require("./model");
 const app = express();
 const PORT = 3000;
 
+app.engine("mustache", mustacheExpress());
+app.set("view engine", "mustache");
+app.set("views", __dirname);
+app.use(express.urlencoded({extende: true}));
+app.use(express.json());
 
 // 8 Actions - 8 Routes
 // Action 1/2/3: List + filter + sort
@@ -20,7 +25,7 @@ const PORT = 3000;
 // Action 8: delete movie
 
 (async () => {
-    await model.init();
+    //await model.init();
     app.listen(PORT, () => {
         console.log(`Movie Tracker running at http://localhost:${PORT}`);
     });

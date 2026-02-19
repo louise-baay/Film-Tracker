@@ -1,19 +1,208 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Movie Tracker</title>
-
-</head>
-
-<body>
-
-
-
-
-
-
-
-</body>
+   <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <title>Movie Tracker</title>
+   </head>
+   <body>
+      <div>
+         <form class="controls" method="GET" action="/">
+            <div>
+               <label>Search (title/genre)</label>
+               <input name="q" value"{{q}} placeholder="dune"/>
+            </div>
+            <div>
+               <label>Filter</label>
+               <select name="filter">
+               <option value="all" {{#filter_all}}selected{{/filter_all}}>All</option>
+               <option value="watched" {{#filter_watched}}selected{{/filter_watched}}>Watched</option>
+               <option value="unwatched" {{#filter_unwatched}}selected{{/filter_unwatched}}>Unatched</option>
+               </select>
+            </div>
+            <div>
+               <label>Sort</label>
+               <select name="sort">
+               <option value="newest" {{#sort_newest}}selected{{/sort_newest}}>Newest</option>
+               <option value="oldest" {{#sort_oldest}}selected{{/sort_oldest}}>Oldest</option>
+               <option value="rating_high" {{#sort_rating_high}}selected{{/sort_rating_high}}>Rating (high)</option>
+               <option value="rating_low" {{#sort_rating_low}}selected{{/sort_rating_low}}>Rating (low)</option>
+               <option value="watch_date" {{#sort_watch_date}}selected{{/sort_watch_date}}>Watch date</option>
+               </select>
+            </div>
+            <button type="submit">Apply</button>
+         </form>
+         <form method="POST" action="/clear-watched" style="margin-top:10px;">
+            <input type="hidden" name="filter" value="{{#filter_watched}}watched{{/filter_watched}}{{^filter_watched}}{{#filter_unwatched}}unwatched{{/filter_unwatched}}{{^filter_unwatched}}all{{/filter_unwatched}}{{/filter_watched}}">
+            <input type="hidden" name="sort" value="{{#sort_newest}}newest{{/sort_newest}}{{#sort_oldest}}oldest{{/sort_oldest}}{{#sort_rating_high}}rating_high{{/sort_rating_high}}{{#sort_rating_low}}rating_low{{/sort_rating_low}}{{#sort_watch_date}}watch_date{{/sort_watch_date}}">
+            <input type="hidden" name="q" value="{{q}}">
+            <button type="submit">Delete All Watched Movies</button>
+         </form>
+      </div>
+      <div>
+         <div>
+            <h2>Collection of Movies</h2>
+            <table>
+               <thead>
+                  <tr>
+                     <th>Poster</th>
+                     <th>Title</th>
+                     <th>Genre</th>
+                     <th>Rating</th>
+                     <th>Status</th>
+                     <th>Watch Date</th>
+                     <th>Actions</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  {{#movies}}
+                  <tr>
+                     <td>
+                        {{#hasPoster}}
+                        <img src="{{poster_url}} alt="Poster">
+                        {{/hasPoster}}
+                        {{^hasPoster}}
+                        <span>(no image)</span>
+                        {{/hasPoster}}
+                     </td>
+                     <td>{{title}}</td>
+                     <td>{{genre}}</td>
+                     <td>{{rating}}</td>
+                     <td>
+                        <span>
+                        {{#watchedYes}}Watched{{/watchedYes}}
+                        {{#watchedNo}}Unwatched{{/watchedNo}}
+                        </span>
+                     </td>
+                     <td>{{watch_date}}</td>
+                     <td>
+                        <div class="row-actions">
+                           <a href="/edit/{{id}}">Edit</a>
+                           <form method="POST" action="/toggle/{{id}}">
+                              <input type="hidden" name="q" value="{{../q}}">
+                              <button type="submit">Toggle Watched</button>
+                           </form>
+                           <form method="POST" action="/delete/{{id}}">
+                              <input type="hidden" name="q" value="{{../q}}">
+                              <button type="submit">Delete</button>
+                           </form>
+                        </div>
+                     </td>
+                  <tr>
+                     {{/movies}}
+                     {{^movies}}
+                  <tr>
+                     <td colspan="7">No movies found.</td>
+                  </tr>
+                  {{/movies}}
+               </tbody>
+            </table>
+            <div class="cards">
+               {{#movies}}
+               <div class="panel" style="margin-bottom:12px;">
+                  <div style="display:flex; gap:12px;">
+                     <div>
+                        {{#hasPoster}}
+                        <img src="{{poster_url}}" alt="Poster" style="width:70px; height:100px; object-fit:cover; border:1px solid #ccc;">
+                        {{/hasPoster}}
+                        {{^hasPoster}}
+                        <div style="width:70px; height:100px; border:1px solid #ccc; display:flex; align-items:center; justify-content:center; font-size:12px;">
+                           No image
+                        </div>
+                        {{/hasPoster}}
+                     </div>
+                     <div style="flex:1;">
+                        <div><b>{{title}}</b></div>
+                        <div>Genre: {{genre}}</div>
+                        <div>Rating: {{rating}}</div>
+                        <div>
+                           Status:
+                           <span class="badge">
+                           {{#watchedYes}}Watched{{/watchedYes}}
+                           {{#watchedNo}}Unwatched{{/watchedNo}}
+                           </span>
+                        </div>
+                        <div>Watch Date: {{watch_date}}</div>
+                     </div>
+                  </div>
+                  <div style="margin-top:10px;">
+                     <a href="/edit/{{id}}">Edit</a>
+                     <form method="POST" action="/toggle/{{id}}" style="margin-top:8px;">
+                        <input type="hidden" name="q" value="{{../q}}">
+                        <button type="submit">Toggle Watched</button>
+                     </form>
+                     <form method="POST" action="/delete/{{id}}" style="margin-top:8px;">
+                        <input type="hidden" name="q" value="{{../q}}">
+                        <button type="submit">Delete</button>
+                     </form>
+                  </div>
+               </div>
+               {{/movies}}
+               {{^movies}}
+               <div>No movies found.</div>
+               {{/movies}}
+            </div>
+         </div>
+         <!-- RIGHT: Add/Edit Form -->
+         <div class="panel">
+            {{#isAdd}}
+            <h2 style="margin-top:0;">Add Movie</h2>
+            {{/isAdd}}
+            {{#isEdit}}
+            <h2 style="margin-top:0;">Edit Movie #{{editMovieId}}</h2>
+            {{/isEdit}}
+            {{#hasErrors}}
+            <div class="error-box">
+               <b>Fix these issues:</b>
+               <ul>
+                  {{#errors}}
+                  <li>{{msg}}</li>
+                  {{/errors}}
+               </ul>
+            </div>
+            {{/hasErrors}}
+            <form method="POST" action="{{#isEdit}}/edit/{{editMovieId}}{{/isEdit}}{{#isAdd}}/add{{/isAdd}}">
+               <!-- keep list state after submit -->
+               <input type="hidden" name="q" value="{{q}}">
+               <div style="margin-bottom:10px;">
+                  <label>Title</label>
+                  <input name="title" value="{{form_title}}" required />
+               </div>
+               <div style="margin-bottom:10px;">
+                  <label>Genre</label>
+                  <input name="genre" value="{{form_genre}}" required />
+               </div>
+               <div style="margin-bottom:10px;">
+                  <label>Rating (0–10)</label>
+                  <input name="rating" value="{{form_rating}}" placeholder="e.g. 8.5" />
+               </div>
+               <div style="margin-bottom:10px;">
+                  <label>Watched?</label>
+                  <select name="watched">
+                  <option value="0" {{#form_watched_0}}selected{{/form_watched_0}}>No</option>
+                  <option value="1" {{#form_watched_1}}selected{{/form_watched_1}}>Yes</option>
+                  </select>
+               </div>
+               <div style="margin-bottom:10px;">
+                  <label>Watch Date (YYYY-MM-DD)</label>
+                  <input name="watch_date" value="{{form_watch_date}}" placeholder="2026-02-17" />
+               </div>
+               <div style="margin-bottom:10px;">
+                  <label>Review (optional)</label>
+                  <textarea name="review">{{form_review}}</textarea>
+               </div>
+               <div style="margin-bottom:10px;">
+                  <label>Poster URL (optional)</label>
+                  <input name="poster_url" value="{{form_poster_url}}" placeholder="https://..." />
+               </div>
+               <button type="submit">{{#isEdit}}Save Changes{{/isEdit}}{{#isAdd}}Add Movie{{/isAdd}}</button>
+               {{#isEdit}}
+               <div style="margin-top:10px;">
+                  <a href="/">Cancel edit</a>
+               </div>
+               {{/isEdit}}
+            </form>
+         </div>
+      </div>
+   </body>
 </html>

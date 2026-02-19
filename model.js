@@ -14,3 +14,29 @@ const db = new sqlite3.Database(DB_PATH);
 // watch_date TEXT
 // review TEXT
 // poster_url TEXT*/
+
+function init(){
+    const sql = `
+    CREATE TABLE IF NOT EXISTS movies (
+        id INTEGER PRIMARY KEY,
+        title TEXT NOT NULL,
+        genre TEXT NOT NULL,
+        rating REAL NOT NULL,
+        watched INTEGER NOT NULL,
+        watched_date TEXT,
+        review TEXT,
+        poster_url TEXT)`;
+    return run(sql);
+}
+
+function run(){
+
+}
+
+function get(){
+
+}
+
+function all(){
+    
+}
