@@ -3,10 +3,28 @@
    <head>
       <meta charset="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <title>Movie Tracker</title>
+      <title>{{pageTitle}}</title>
+      <style>
+         body { font-family: Arial, sans-serif; margin: 16px; }
+         header { display: flex; align-items: center; gap: 12px; padding: 12px; border: 1px solid #ccc; }
+         header img { width: 64px; height: 64px; object-fit: cover; border: 1px solid #ccc; }
+         .container { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-top: 16px; }
+         .panel { border: 1px solid #ccc; padding: 12px; }
+         .controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: end; }
+         .controls label { display: block; font-size: 12px; }
+         input, select, textarea, button { padding: 8px; font-size: 14px; }
+         textarea { width: 100%; height: 70px; }
+         table { width: 100%; border-collapse: collapse; }
+         th, td { border: 1px solid #ddd; padding: 8px; vertical-align: top; }
+         th { text-align: left; }
+         .row-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+         .badge { display: inline-block; padding: 2px 8px; border: 1px solid #999; font-size: 12px; }
+         .error-box { border: 1px solid #c00; padding: 10px; margin-bottom: 10px; }
+         .notice-box { border: 1px solid #090; padding: 10px; margin-bottom: 10px; }
+      </style>
    </head>
    <body>
-      <div>
+      <div class="panel">
          <form class="controls" method="GET" action="/">
             <div>
                <label>Search (title/genre)</label>
@@ -39,8 +57,8 @@
             <button type="submit">Delete All Watched Movies</button>
          </form>
       </div>
-      <div>
-         <div>
+      <div class="container">
+         <div class="panel">
             <h2>Collection of Movies</h2>
             <table>
                <thead>
@@ -69,7 +87,7 @@
                      <td>{{genre}}</td>
                      <td>{{rating}}</td>
                      <td>
-                        <span>
+                        <span class="badge">
                         {{#watchedYes}}Watched{{/watchedYes}}
                         {{#watchedNo}}Unwatched{{/watchedNo}}
                         </span>
