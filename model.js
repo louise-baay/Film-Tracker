@@ -29,16 +29,31 @@ function init(){
     return run(sql);
 }
 
-function run(){
-
+function run(sql, params = []){
+    return new Promise((resolve, reject) => {
+        db.run(sql, params, function(err) {
+            if (err) reject (err);
+            else resolve(this);
+        })
+    })
 }
 
-function get(){
-
+function get(sql, params = []){
+    return new Promise((resolve, reject) => {
+        db.get(sql, params, function(err) {
+            if (err) reject (err);
+            else resolve(this);
+        })
+    })
 }
 
-function all(){
-
+function all(sql, params = []){
+    return new Promise((resolve, reject) => {
+        db.all(sql, params, function(err) {
+            if (err) reject (err);
+            else resolve(this);
+        })
+    })
 }
 
 
@@ -49,3 +64,28 @@ function all(){
 // toggle watched
 // delete a movie
 // cleare watched */
+
+async function addMovie(data){
+    const sql = `
+    INSERT INTO movies (title, genre, rating, watched, watch_date, review, poster_url)
+    VALUES (?, ?, ?, ?, ?, ?, ?)`;
+
+    const params = [
+        data.title,
+        data.genre,
+        data.rating,
+        data.watched,
+        data.watch_date || null,
+        data.review || "",
+        data.poster_url || ""
+    ];
+
+    const res = await run(sql, params);
+    return res.lastID();
+}
+
+
+module.exports = {
+    init,
+    addMovie,
+}
