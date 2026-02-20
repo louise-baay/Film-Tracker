@@ -124,7 +124,7 @@ async function addMovie(data){
 async function updateMovie(id, data){
     const sql = `
     UPDATE movies
-    SET title = ?, genre = ?, watched = ?, watch_date = ?, review = ?, poster_url = ?
+    SET title = ?, genre = ?,rating = ?, watched = ?, watch_date = ?, review = ?, poster_url = ?
     WHERE id = ?`;
 
     const params = [
@@ -144,6 +144,16 @@ async function deleteMovie(id) {
     await run(`DELETE FROM movies WHERE id = ?`, [id]);    
 }
 
+async function toggleWatched(id){
+    await run(
+        `UPDATE movies
+        SET watched = CASE watched WHEN 1 THEN 0 ELSE 1 END,
+            watch_date = CASE watched WHEN 1 THEN NULL ELSE watch_date END
+        WHERE id = ?`,
+        [id]
+    );
+}
+
 
 module.exports = {
     init,
@@ -152,4 +162,5 @@ module.exports = {
     updateMovie,
     getMovieById,
     deleteMovie,
+    toggleWatched,
 }  

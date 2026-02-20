@@ -244,6 +244,16 @@ app.post("/edit/:id", async (req, res) => {
 });
 
 // Action 7: toggle watched
+app.post("/toggle/:id", async (req, res) => {
+    const id = Number(req.params.id);
+    await model.toggleWatched(id);
+
+    const filter = req.body.filter || "all";
+    const sort = req.body.sort || "newest";
+    const q = req.body.q || "";
+
+    res.redirect(`/?filter=${encodeURIComponent(filter)}&sort=${encodeURIComponent(sort)}&q=${encodeURIComponent(q)}`);
+});
 
 // Action 8: delete movie
 app.post("/delete/:id", async (req, res) =>{
