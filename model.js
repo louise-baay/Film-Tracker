@@ -96,7 +96,7 @@ async function listMovies({filter = "all", sort="newest", q=""} = {}){
 
 function getMovieById(id){
     return get(
-        `SELECT id, title, genre, rating, watched, watch_date, reviw, poster_url
+        `SELECT id, title, genre, rating, watched, watch_date, review, poster_url
         FROM movies WHERE id = ?`,
         [id]
     );
