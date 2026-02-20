@@ -94,6 +94,14 @@ async function listMovies({filter = "all", sort="newest", q=""} = {}){
     return all(sql, params);
 }
 
+function getMovieById(id){
+    return get(
+        `SELECT id, title, genre, rating, watched, watch_date, reviw, poster_url
+        FROM movies WHERE id = ?`,
+        [id]
+    );
+}
+
 async function addMovie(data){
     const sql = `
     INSERT INTO movies (title, genre, rating, watched, watch_date, review, poster_url)
@@ -113,9 +121,30 @@ async function addMovie(data){
     return res.lastID;
 }
 
+async function updateMovie(id, data){
+    const sql = `
+    UPDATE movies
+    SET title = ?, genre = ?, watched = ?, watch_date = ?, review = ?, poster_url = ?
+    WHERE id = ?`;
+
+    const params = [
+        data.title,
+        data.genre,
+        data.rating,
+        data.watched,
+        data.watch_date || null,
+        data.review || "",
+        data.poster_url || "",
+        id,
+    ];
+    await run(sql, params);
+}
+
 
 module.exports = {
     init,
     addMovie,
     listMovies,
+    updateMovie,
+    getMovieById,
 }  

@@ -144,7 +144,35 @@ app.get("/", async (req,res) => {
     });
 })
 
-// Action 4: show edit form
+// Action 4: prefill "Add Movie Form" so we can edit
+app.get("/edit/:id", async (req, res) => {
+    const id = Number(req.params.id);
+    const movieId = await model.getMovieById(id);
+    if(!movieId) return res.status(404).send("Movie Not Found!");
+
+    const filter = req.query.filter || "all";
+    const sort = req.query. sort  || "newest";
+    const q = req.query.q || "";
+
+    const movies = await model.listMovies({filter, sort, q});
+    const decorated = movies.map(m => ({
+        ...m,
+        watchedYes: m.watched === 1,
+        watchedNo: m.watched === 0,
+        hasPoster: !!(m.poster_url && m.poster_url.trim()),
+        hasReview: !!(m.review && m.review.trim()),
+    }));
+
+    await renderHome(res, {
+        movies: decorated,
+        mode: "edit",
+        editMovieId: id,
+        form: movieId,
+        filter,
+        sort,
+        q,
+    });
+});
 
 // Action 5: create movie
 app.post("/add", async (req, res) => {
@@ -180,6 +208,40 @@ app.post("/add", async (req, res) => {
 });
 
 // Action 6: update movie
+app.post("/edit/:id", async (req, res) => {
+    const id = Number(req.params.id);
+    const data = normalizeMovieForm(req.body);
+    const errors = validateMovie(data);
+
+    const filter = req.body.filter || "";
+    const sort = req.body.sort || "newest";
+    const q = req.body.q || "";
+
+    if (errors.length){
+        const movies = await model.listMovies({filter, sort, q});
+        const decorated = movies.map(m => ({
+            ...m,
+            watchedYes: m.watched === 1,
+            watchedNo: m.watched === 0,
+            hasPoster: !!(m.poster_url && m.poster_url.trim()),
+            hasReview: !!(m.review && m.review.trim()),
+        }));
+
+        return renderHome(res, {
+            movies: decorated,
+            errors,
+            mode: "edit",
+            editMovieId: id,
+            form: {...data, id},
+            filter,
+            sort,
+            q,
+        });
+    }
+
+    await model.updateMovie(id, data);
+    res.redirect(`/?filter=${encodeURIComponent(filter)}&sort=${encodeURIComponent(sort)}&q=${encodeURIComponent(q)}`);
+});
 
 // Action 7: toggle watched
 
