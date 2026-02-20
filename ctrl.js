@@ -36,7 +36,9 @@ function normalizeMovieForm(body){
         watched: body.watched === "1" ? 1 : 0,
         watch_date: String(body.watch_date ?? "").trim(), 
         review: String(body.review ?? "").trim(),
-        poster_url: String(body.poster_url ?? "").trim()
+        poster_url: String(body.poster_url ?? "")
+            .trim()
+            .replace(/^"+|"+$/g, "")
     };
 }
 
