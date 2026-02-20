@@ -140,6 +140,10 @@ async function updateMovie(id, data){
     await run(sql, params);
 }
 
+async function deleteMovie(id) {
+    await run(`DELETE FROM movies WHERE id = ?`, [id]);    
+}
+
 
 module.exports = {
     init,
@@ -147,4 +151,5 @@ module.exports = {
     listMovies,
     updateMovie,
     getMovieById,
+    deleteMovie,
 }  
