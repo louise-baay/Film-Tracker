@@ -80,6 +80,7 @@
                      <th>Rating</th>
                      <th>Status</th>
                      <th>Watch Date</th>
+                     <th>Review</th>
                      <th>Actions</th>
                   </tr>
                </thead>
@@ -106,6 +107,14 @@
                      </td>
                      <td>{{watch_date}}</td>
                      <td>
+                        {{#hasReview}}
+                           {{review}}
+                        {{/hasReview}}
+                        {{^hasReview}}
+                           <span>(no review)</span>
+                        {{/hasReview}}
+                     </td>
+                     <td>
                         <div class="row-actions">
                            <a href="/edit/{{id}}">Edit</a>
                            <form method="POST" action="/toggle/{{id}}">
@@ -122,7 +131,7 @@
                      {{/movies}}
                      {{^movies}}
                   <tr>
-                     <td colspan="8">No movies found.</td>
+                     <td colspan="9">No movies found.</td>
                   </tr>
                   {{/movies}}
                </tbody>
@@ -195,12 +204,12 @@
                <!-- keep list state after submit -->
                <input type="hidden" name="q" value="{{q}}">
                <div style="margin-bottom:10px;">
-                  <label>Title</label>
-                  <input name="title" value="{{form_title}}" required />
+                  <label>Title:</label>
+                  <input name="title" value="{{form_title}}" placeholder="Dune, Harry Potter, etc" required />
                </div>
                <div style="margin-bottom:10px;">
-                  <label>Genre</label>
-                  <input name="genre" value="{{form_genre}}" required />
+                  <label>Genre:</label>
+                  <input name="genre" value="{{form_genre}}" placeholder="Drama, Comedy, Romance, etc"required />
                </div>
                <div style="margin-bottom:10px;">
                   <label>Rating (0–10)</label>
@@ -214,15 +223,15 @@
                   </select>
                </div>
                <div style="margin-bottom:10px;">
-                  <label>Watch Date (YYYY-MM-DD)</label>
+                  <label>Watch Date: (YYYY-MM-DD)</label>
                   <input name="watch_date" value="{{form_watch_date}}" placeholder="2026-02-17" />
                </div>
                <div style="margin-bottom:10px;">
-                  <label>Review (optional)</label>
+                  <label>Review: (optional)</label>
                   <textarea name="review">{{form_review}}</textarea>
                </div>
                <div style="margin-bottom:10px;">
-                  <label>Poster URL (optional)</label>
+                  <label>Poster URL: (optional)</label>
                   <input name="poster_url" value="{{form_poster_url}}" placeholder="https://..." />
                </div>
                <button type="submit">{{#isEdit}}Save Changes{{/isEdit}}{{#isAdd}}Add Movie{{/isAdd}}</button>

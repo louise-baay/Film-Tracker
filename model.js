@@ -93,7 +93,7 @@ async function listMovies({filter = "all", sort="newest", q=""} = {}){
     `;
     return all(sql, params);
 }
-
+    
 function getMovieById(id){
     return get(
         `SELECT id, title, genre, rating, watched, watch_date, review, poster_url
@@ -152,9 +152,9 @@ async function toggleWatched(id){
         WHERE id = ?`,
         [id]
     );
-}
+} 
 
-
+ 
 module.exports = {
     init,
     addMovie,
