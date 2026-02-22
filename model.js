@@ -13,8 +13,8 @@ const db = new sqlite3.Database(DB_PATH);
 // watched INTEGER
 // watch_date TEXT
 // review TEXT
-// poster_url TEXT*/
-
+// poster_url TEXT*/ 
+  
 function init(){
     const sql = `
     CREATE TABLE IF NOT EXISTS movies (
@@ -92,8 +92,8 @@ async function listMovies({filter = "all", sort="newest", q=""} = {}){
         ${orderBy}
     `;
     return all(sql, params);
-}
-    
+}  
+     
 function getMovieById(id){
     return get(
         `SELECT id, title, genre, rating, watched, watch_date, review, poster_url
