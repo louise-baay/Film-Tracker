@@ -91,6 +91,14 @@ async function listMovies({filter = "all", sort="newest", q=""} = {}){
         ${whereSql}
         ${orderBy}
     `;
+    /**
+     * example of what it outputs
+     * SELECT id, title, genre, rating, watched, watch_date, review, poster_url
+     * FROM movies
+     * WHERE watched = 0 AND (title LIKE ? OR genre LIKE ?)
+     * ORDER BY id ASC
+     */
+
     return all(sql, params);
 }  
      
@@ -118,7 +126,7 @@ async function addMovie(data){
     ];
 
     const res = await run(sql, params);
-    return res.lastID;
+    return res.lastID;//returns inserted id
 }
 
 async function updateMovie(id, data){

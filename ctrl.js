@@ -30,15 +30,15 @@ function isValidDateYYYYMMDD(s) {
 
 function normalizeMovieForm(body){
     return {
-        title: String(body.title ?? "").trim(),
-        genre: String(body.genre ?? "").trim(),
-        rating: Number(body.rating),
-        watched: body.watched === "1" ? 1 : 0,
-        watch_date: String(body.watch_date ?? "").trim(), 
+        title: String(body.title ?? "").trim(), //if title is missing use "", trim removes leading/trailing spaces
+        genre: String(body.genre ?? "").trim(), //if genre is missing use ""
+        rating: Number(body.rating),//converts rating to a number
+        watched: body.watched === "1" ? 1 : 0,//converts watched into integer format "1" becomes 1, else is 0
+        watch_date: String(body.watch_date ?? "").trim(), //same as title, genre, trim
         review: String(body.review ?? "").trim(),
         poster_url: String(body.poster_url ?? "")
             .trim()
-            .replace(/^"+|"+$/g, "")
+            .replace(/^"+|"+$/g, "")//removes quotes at start and end
     };
 }
 
@@ -67,7 +67,7 @@ function validateMovie(data){
 
     return errors;
 }
-
+//helper function that renders mustache
 async function renderHome(res, {
   movies = [],
   errors = [],
@@ -123,12 +123,12 @@ async function renderHome(res, {
 // 8 Actions - 8 Routes
 // Action 1/2/3: List + filter + sort
 app.get("/", async (req,res) => {
-    const filter = req.query.filter || "all";
+    const filter = req.query.filter || "all";//reads value from the URL query string - say /?filter=watched /?sort=rating_high
     const sort = req.query.sort || "newest";
     const q = req.query.q || "";
 
-    const movies = await model.listMovies({filter, sort, q});
-    const decorated = movies.map(m => ({
+    const movies = await model.listMovies({filter, sort, q});//calls the model to list the movies based on the above "filter/sort/q"
+    const decorated = movies.map(m => ({//controller adds the derived values so we can render them later
         ...m,
         watchedYes: m.watched === 1,
         watchedNo: m.watched === 0,
@@ -136,7 +136,7 @@ app.get("/", async (req,res) => {
         hasReview: !!(m.review && m.review.trim()),
     }));
 
-    await renderHome(res, {
+    await renderHome(res, {//render the pages in add mode and all current state
         movies: decorated,
         mode: "add",
         form: { watched: 0 },
@@ -152,8 +152,8 @@ app.get("/edit/:id", async (req, res) => {
     const movieId = await model.getMovieById(id);
     if(!movieId) return res.status(404).send("Movie Not Found!");
 
-    const filter = req.query.filter || "all";
-    const sort = req.query. sort  || "newest";
+    const filter = req.query.filter || "all"; 
+    const sort = req.query. sort  || "newest"; 
     const q = req.query.q || "";
 
     const movies = await model.listMovies({filter, sort, q});
@@ -206,7 +206,7 @@ app.post("/add", async (req, res) => {
     }
 
     await model.addMovie(data);
-    res.redirect(`/?filter=${encodeURIComponent(filter)}&sort=${encodeURIComponent(sort)}&q=${encodeURIComponent(q)}`);
+    res.redirect(`/?filter=${encodeURIComponent(filter)}&sort=${encodeURIComponent(sort)}&q=${encodeURIComponent(q)}`);//redirect back to home page, so we can prevent duplicate submission on refresh
 });
 
 // Action 6: update movie
